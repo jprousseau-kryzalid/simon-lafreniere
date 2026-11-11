@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simon Lafrenière · Vous êtes rendu là</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+</style>
+<style>
+  /* Mise en page : une colonne sur fond sombre de la charte pour faire ressortir les films ; deux concepts, chacun une paire de films verticaux côte à côte. Look sombre assumé, identique pour tous les lecteurs. */
+  :root {
+    --fond: #1d1819;        /* color/base/800 */
+    --fond-2: #2a2324;
+    --encre: #f7f3ed;       /* color/brand/primary/200 */
+    --encre-2: #b3a79e;
+    --filet: #3a3132;
+    --marque: #c3b8b0;      /* color/brand/primary/300 */
+    --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    color-scheme: dark;
+  }
+  body { background: var(--fond); color: var(--encre); font-family: var(--sans); font-size: 16px; line-height: 1.5; }
+  .page {
+    max-width: 1080px; margin: 0 auto;
+    padding-block: 64px 96px;
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 88px;
+  }
+  header { display: grid; gap: 20px; max-width: 46rem; }
+  .surtitre { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre-2); font-weight: 500; }
+  h1 { font-size: clamp(40px, 6vw, 64px); line-height: 1.02; font-weight: 600; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  .intro { font-size: 18px; color: var(--encre-2); margin: 0; max-width: 38rem; }
+  .fiche { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 14px; color: var(--encre-2); padding-top: 4px; }
+  .fiche b { color: var(--encre); font-weight: 500; }
+
+  section { display: grid; gap: 32px; padding-top: 32px; border-top: 1px solid var(--filet); }
+  .tete { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px 48px; align-items: start; }
+  .concept { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre-2); font-weight: 500; margin-bottom: 8px; }
+  h2 { font-size: 30px; line-height: 1.1; font-weight: 600; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+  .tete p { margin: 0; color: var(--encre-2); max-width: 34rem; }
+
+  /* chaque film tient toujours en entier dans la hauteur de l'écran */
+  .films { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px 48px; }
+  figure {
+    margin: 0; display: grid; gap: 14px; min-width: 0;
+    width: min(100%, calc((100vh - 150px) * 9 / 16));
+    width: min(100%, calc((100svh - 150px) * 9 / 16));
+  }
+  video {
+    display: block; width: 100%; max-width: 100%; aspect-ratio: 9 / 16; height: auto;
+    background: var(--fond-2); border-radius: 6px; object-fit: cover;
+    box-shadow: 0 0 0 1px var(--filet), 0 24px 60px -30px rgba(0, 0, 0, .8);
+  }
+  video:focus-visible { outline: 2px solid var(--marque); outline-offset: 4px; }
+  figcaption { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .agrandir {
+    font: inherit; font-size: 13px; color: var(--encre); background: transparent;
+    border: 1px solid var(--filet); border-radius: 999px; padding: 6px 14px; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .agrandir:hover { border-color: var(--marque); }
+  .agrandir:focus-visible { outline: 2px solid var(--marque); outline-offset: 2px; }
+  .agrandir svg { width: 14px; height: 14px; }
+
+  /* lecteur agrandi : le film seul, ajusté à la hauteur de la fenêtre */
+  .grand {
+    position: fixed; inset: 0; z-index: 20; background: rgba(12, 10, 10, .94);
+    display: grid; place-items: center;
+    padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  }
+  .grand[hidden] { display: none; }
+  .grand video {
+    width: auto; height: auto; max-width: 100%;
+    max-height: calc(100vh - 96px); max-height: calc(100svh - 96px);
+    aspect-ratio: 9 / 16; box-shadow: none;
+  }
+  .grand .fermer {
+    position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px));
+  }
+  .grand .nom { position: absolute; top: calc(22px + env(safe-area-inset-top, 0px)); left: calc(20px + env(safe-area-inset-left, 0px)); font-size: 14px; color: var(--encre-2); }
+  .titre-film { font-weight: 600; font-size: 17px; display: inline-flex; gap: 10px; align-items: baseline; }
+  .duree { font-size: 13px; color: var(--encre-2); font-variant-numeric: tabular-nums; }
+  .accroche { grid-column: 1 / -1; font-size: 14px; color: var(--encre-2); margin-top: -8px; }
+
+  footer { font-size: 13px; color: var(--encre-2); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; border-top: 1px solid var(--filet); padding-top: 24px; }
+
+  @media (max-width: 720px) {
+    .page { gap: 64px; padding-block: 40px 64px; }
+    .tete { grid-template-columns: minmax(0, 1fr); }
+    .films { gap: 16px; }
+  }
+  @media (max-width: 420px) {
+    .films { gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<main class="page">
+  <header>
+    <div class="surtitre">Simon Lafrenière · Animations verticales</div>
+    <h1>Vous êtes rendu là</h1>
+    <p class="intro">Deux concepts pour la même idée : la maison ne suit plus la famille. Chaque concept existe en deux versions, quand la maison est rendue trop petite et quand elle est rendue trop grande.</p>
+    <div class="fiche">
+      <span><b>Format</b> 1080 × 1920, 9:16</span>
+      <span><b>Durée</b> 18 s</span>
+      <span><b>Son</b> trame musicale, voix à venir</span>
+    </div>
+  </header>
+
+  <section aria-labelledby="c1">
+    <div class="tete">
+      <div>
+        <div class="concept">Concept 1</div>
+        <h2 id="c1">La maison</h2>
+      </div>
+      <p>Le contour d'une maison encadre la famille. La famille grandit jusqu'à ce que le père se cogne au toit, ou les enfants partent et le couple se perd dans l'espace.</p>
+    </div>
+    <div class="films">
+      <figure>
+        <video id="v-maison-petite" controls playsinline preload="metadata" poster="videos/concept-maison-trop-petite.jpg" src="videos/concept-maison-trop-petite.mp4"></video>
+        <figcaption><span class="titre-film">Trop petite <span class="duree">0:18</span></span><button class="agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> Voir en grand</button></figcaption>
+      </figure>
+      <figure>
+        <video id="v-maison-grande" controls playsinline preload="metadata" poster="videos/concept-maison-trop-grande.jpg" src="videos/concept-maison-trop-grande.mp4"></video>
+        <figcaption><span class="titre-film">Trop grande <span class="duree">0:18</span></span><button class="agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> Voir en grand</button></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section aria-labelledby="c2">
+    <div class="tete">
+      <div>
+        <div class="concept">Concept 2</div>
+        <h2 id="c2">La cuisine</h2>
+      </div>
+      <p>Une vraie cuisine qui ne change jamais. La chaise d'un ado vient bloquer le passage du père, ou les chaises vides et le silence montrent le vide.</p>
+    </div>
+    <div class="films">
+      <figure>
+        <video id="v-cuisine-petite" controls playsinline preload="metadata" poster="videos/concept-cuisine-trop-petite.jpg" src="videos/concept-cuisine-trop-petite.mp4"></video>
+        <figcaption><span class="titre-film">Trop petite <span class="duree">0:18</span></span><button class="agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> Voir en grand</button></figcaption>
+      </figure>
+      <figure>
+        <video id="v-cuisine-grande" controls playsinline preload="metadata" poster="videos/concept-cuisine-trop-grande.jpg" src="videos/concept-cuisine-trop-grande.mp4"></video>
+        <figcaption><span class="titre-film">Trop grande <span class="duree">0:18</span></span><button class="agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> Voir en grand</button></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <footer>
+    <span>Simon Lafrenière, courtier immobilier résidentiel et commercial</span>
+    <span>Version de travail pour présentation interne</span>
+  </footer>
+</main>
+
+<div class="grand" id="grand" hidden role="dialog" aria-modal="true" aria-label="Film agrandi">
+  <span class="nom" id="grand-nom"></span>
+  <button class="agrandir fermer" type="button" id="fermer">Fermer</button>
+  <video id="grand-video" controls playsinline></video>
+</div>
+
+<script>
+  // Une seule vidéo joue à la fois : lancer un film met les autres en pause.
+  const films = document.querySelectorAll("video");
+  films.forEach(v => v.addEventListener("play", () => films.forEach(o => { if (o !== v) o.pause(); })));
+
+  // « Voir en grand » : le film seul, à la hauteur de la fenêtre, repris là où il était.
+  const grand = document.getElementById("grand");
+  const gv = document.getElementById("grand-video");
+  let source = null;
+  document.querySelectorAll(".agrandir:not(.fermer)").forEach(b => b.addEventListener("click", () => {
+    const fig = b.closest("figure");
+    source = fig.querySelector("video");
+    const concept = fig.closest("section").querySelector("h2").textContent;
+    document.getElementById("grand-nom").textContent = concept + " · " + fig.querySelector(".titre-film").firstChild.textContent.trim();
+    source.pause();
+    gv.poster = source.poster;
+    gv.src = source.currentSrc || source.src;
+    gv.currentTime = source.currentTime || 0;
+    grand.hidden = false;
+    document.body.style.overflow = "hidden";
+    gv.play().catch(() => {});
+    document.getElementById("fermer").focus();
+  }));
+  function fermer() {
+    if (grand.hidden) return;
+    gv.pause();
+    if (source) { try { source.currentTime = gv.currentTime; } catch (e) {} }
+    grand.hidden = true;
+    document.body.style.overflow = "";
+  }
+  document.getElementById("fermer").addEventListener("click", fermer);
+  grand.addEventListener("click", e => { if (e.target === grand) fermer(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") fermer(); });
+</script>
+
+</body>
+</html>
