@@ -3,197 +3,304 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Simon Lafrenière · Vous êtes rendu là</title>
+<title>Vous êtes rendu là</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Mali:wght@300&display=swap">
 <style>
-  *, *::before, *::after { box-sizing: border-box; }
-  [hidden] { display: none !important; }
-</style>
-<style>
-  /* Mise en page : une colonne sur fond sombre de la charte pour faire ressortir les films ; deux concepts, chacun une paire de films verticaux côte à côte. Look sombre assumé, identique pour tous les lecteurs. */
+  /* police de l'accroche, servie avec la page (licence OFL) */
+  @font-face { font-family: "Mali Local"; src: url("medias/Mali-Light.woff") format("woff"); font-weight: 300; font-display: swap; }
+  /* Fond sombre de la charte pour faire ressortir les visuels beiges et blancs. */
   :root {
-    --fond: #1d1819;        /* color/base/800 */
+    --fond: #1d1819;
     --fond-2: #2a2324;
-    --encre: #f7f3ed;       /* color/brand/primary/200 */
+    --encre: #f7f3ed;
     --encre-2: #b3a79e;
     --filet: #3a3132;
-    --marque: #c3b8b0;      /* color/brand/primary/300 */
+    --marque: #c3b8b0;
     --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    --main: "Mali Local", "Mali", "Instrument Sans", sans-serif;
     color-scheme: dark;
   }
-  body { background: var(--fond); color: var(--encre); font-family: var(--sans); font-size: 16px; line-height: 1.5; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fond); color: var(--encre); font-family: var(--sans); font-size: 16px; line-height: 1.5; }
   .page {
     max-width: 1080px; margin: 0 auto;
     padding-block: 64px 96px;
-    padding-left: max(24px, env(safe-area-inset-left, 0px));
-    padding-right: max(24px, env(safe-area-inset-right, 0px));
-    display: grid; gap: 88px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    display: grid; gap: 80px;
   }
-  header { display: grid; gap: 20px; max-width: 46rem; }
-  .surtitre { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre-2); font-weight: 500; }
-  h1 { font-size: clamp(40px, 6vw, 64px); line-height: 1.02; font-weight: 600; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
+  header { display: grid; gap: 18px; max-width: 46rem; }
+  .surtitre, .numero { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre-2); font-weight: 500; }
+  h1 { font-family: var(--main); font-weight: 300; font-size: clamp(48px, 8vw, 84px); line-height: 1; letter-spacing: -.02em; margin: 0; }
   .intro { font-size: 18px; color: var(--encre-2); margin: 0; max-width: 38rem; }
-  .fiche { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 14px; color: var(--encre-2); padding-top: 4px; }
+  .fiche { display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 14px; color: var(--encre-2); }
   .fiche b { color: var(--encre); font-weight: 500; }
 
-  section { display: grid; gap: 32px; padding-top: 32px; border-top: 1px solid var(--filet); }
-  .tete { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px 48px; align-items: start; }
-  .concept { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre-2); font-weight: 500; margin-bottom: 8px; }
-  h2 { font-size: 30px; line-height: 1.1; font-weight: 600; letter-spacing: -.01em; margin: 0; text-wrap: balance; }
+  section { display: grid; gap: 28px; padding-top: 32px; border-top: 1px solid var(--filet); }
+  .tete { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 12px 48px; align-items: start; }
+  h2 { font-size: 30px; line-height: 1.1; font-weight: 600; letter-spacing: -.01em; margin: 6px 0 0; text-wrap: balance; }
   .tete p { margin: 0; color: var(--encre-2); max-width: 34rem; }
+  .texte { display: grid; gap: 12px; }
+  .tete p.note { color: var(--encre); font-size: 14px; border: 1px dashed var(--marque); border-radius: 6px; padding: 8px 12px; justify-self: start; }
 
-  /* chaque film tient toujours en entier dans la hauteur de l'écran */
-  .films { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px 48px; }
+  /* chaque visuel tient en entier dans la hauteur de l'écran */
+  .grille { display: flex; flex-wrap: wrap; justify-content: center; gap: 32px 48px; }
   figure {
     margin: 0; display: grid; gap: 14px; min-width: 0;
     width: min(100%, calc((100vh - 150px) * 9 / 16));
     width: min(100%, calc((100svh - 150px) * 9 / 16));
   }
-  video {
-    display: block; width: 100%; max-width: 100%; aspect-ratio: 9 / 16; height: auto;
-    background: var(--fond-2); border-radius: 6px; object-fit: cover;
+  .media {
+    display: block; width: 100%; aspect-ratio: 9 / 16; height: auto; object-fit: cover;
+    background: var(--fond-2); border-radius: 6px;
     box-shadow: 0 0 0 1px var(--filet), 0 24px 60px -30px rgba(0, 0, 0, .8);
   }
-  video:focus-visible { outline: 2px solid var(--marque); outline-offset: 4px; }
-  figcaption { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .agrandir {
-    font: inherit; font-size: 13px; color: var(--encre); background: transparent;
+  button.vignette { padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: 6px; }
+  .media:focus-visible, button.vignette:focus-visible { outline: 2px solid var(--marque); outline-offset: 4px; }
+  figcaption { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .titre { font-weight: 600; font-size: 17px; display: inline-flex; gap: 10px; align-items: baseline; }
+  .detail { font-size: 13px; color: var(--encre-2); font-weight: 400; font-variant-numeric: tabular-nums; }
+  .actions { display: inline-flex; gap: 8px; }
+  .bouton {
+    font: inherit; font-size: 13px; color: var(--encre); background: transparent; text-decoration: none;
     border: 1px solid var(--filet); border-radius: 999px; padding: 6px 14px; cursor: pointer;
     display: inline-flex; align-items: center; gap: 8px;
   }
-  .agrandir:hover { border-color: var(--marque); }
-  .agrandir:focus-visible { outline: 2px solid var(--marque); outline-offset: 2px; }
-  .agrandir svg { width: 14px; height: 14px; }
+  .bouton:hover { border-color: var(--marque); }
+  .bouton:focus-visible { outline: 2px solid var(--marque); outline-offset: 2px; }
+  .bouton svg { width: 14px; height: 14px; }
+  
 
-  /* lecteur agrandi : le film seul, ajusté à la hauteur de la fenêtre */
+  /* visionneuse : un seul visuel, à la hauteur de la fenêtre */
   .grand {
-    position: fixed; inset: 0; z-index: 20; background: rgba(12, 10, 10, .94);
+    position: fixed; inset: 0; z-index: 20; background: rgba(12, 10, 10, .95);
     display: grid; place-items: center;
-    padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    padding: max(56px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
   }
-  .grand[hidden] { display: none; }
-  .grand video {
-    width: auto; height: auto; max-width: 100%;
-    max-height: calc(100vh - 96px); max-height: calc(100svh - 96px);
-    aspect-ratio: 9 / 16; box-shadow: none;
-  }
-  .grand .fermer {
-    position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px));
-  }
-  .grand .nom { position: absolute; top: calc(22px + env(safe-area-inset-top, 0px)); left: calc(20px + env(safe-area-inset-left, 0px)); font-size: 14px; color: var(--encre-2); }
-  .titre-film { font-weight: 600; font-size: 17px; display: inline-flex; gap: 10px; align-items: baseline; }
-  .duree { font-size: 13px; color: var(--encre-2); font-variant-numeric: tabular-nums; }
-  .accroche { grid-column: 1 / -1; font-size: 14px; color: var(--encre-2); margin-top: -8px; }
+  .grand[hidden], .grand [hidden] { display: none; }
+  .grand .media { width: auto; height: auto; max-width: 100%; max-height: calc(100vh - 88px); max-height: calc(100svh - 88px); box-shadow: none; }
+  .grand .fermer { position: absolute; top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(16px + env(safe-area-inset-right, 0px)); }
+  .grand .nom { position: absolute; top: calc(18px + env(safe-area-inset-top, 0px)); left: calc(16px + env(safe-area-inset-left, 0px)); right: 120px; font-size: 14px; color: var(--encre-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   footer { font-size: 13px; color: var(--encre-2); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; border-top: 1px solid var(--filet); padding-top: 24px; }
 
   @media (max-width: 720px) {
     .page { gap: 64px; padding-block: 40px 64px; }
     .tete { grid-template-columns: minmax(0, 1fr); }
-    .films { gap: 16px; }
+    .grille { gap: 40px; }
   }
-  @media (max-width: 420px) {
-    .films { gap: 32px; }
-  }
+  .paire { display: grid; gap: 14px; }
+  .paire h3 { margin: 0; font-size: 15px; font-weight: 500; color: var(--encre-2); letter-spacing: .02em; }
+  .colonnes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; }
+  @media (max-width: 720px) { .colonnes { grid-template-columns: minmax(0, 1fr); gap: 56px; } }
+  .colonnes .grille { justify-content: flex-start; gap: 24px; flex-wrap: nowrap; }
+  .colonnes figure { width: min(100%, calc((100vh - 170px) * 9 / 16 * .62)); }
+  @media (max-width: 720px) { .colonnes figure { width: calc(50% - 12px); } }
 </style>
 </head>
 <body>
-
 <main class="page">
   <header>
-    <div class="surtitre">Simon Lafrenière · Animations verticales</div>
+    <div class="surtitre">Simon Lafrenière · Campagne verticale</div>
     <h1>Vous êtes rendu là</h1>
-    <p class="intro">Deux concepts pour la même idée : la maison ne suit plus la famille. Chaque concept existe en deux versions, quand la maison est rendue trop petite et quand elle est rendue trop grande.</p>
+    <p class="intro">Deux histoires : la maison devenue trop petite et la maison devenue trop grande. Chaque film existe en trois montages, avec la voix, la narration écrite à l'écran et une marge libre en bas pour les réseaux sociaux.</p>
     <div class="fiche">
       <span><b>Format</b> 1080 × 1920, 9:16</span>
-      <span><b>Durée</b> 18 s</span>
-      <span><b>Son</b> trame musicale, voix à venir</span>
+      <span><b>Durée</b> 13 s</span>
+      <span><b>Son</b> voix, avec ou sans trame au piano</span>
     </div>
   </header>
 
-  <section aria-labelledby="c1">
+  <section aria-labelledby="s-maison">
     <div class="tete">
       <div>
-        <div class="concept">Concept 1</div>
-        <h2 id="c1">La maison</h2>
+        <div class="numero">01 · Vidéos</div>
+        <h2 id="s-maison">La maison en premier</h2>
       </div>
-      <p>Le contour d'une maison encadre la famille. La famille grandit jusqu'à ce que le père se cogne au toit, ou les enfants partent et le couple se perd dans l'espace.</p>
+      <div class="texte"><p>On ouvre sur la maison dessinée avec la question, puis on raconte l'histoire jusqu'à la chute. « Avec trame » ajoute le piano sous la voix ; « sans trame » garde seulement les sons d'ambiance.</p></div>
     </div>
-    <div class="films">
-      <figure>
-        <video id="v-maison-petite" controls playsinline preload="metadata" poster="videos/concept-maison-trop-petite.jpg" src="videos/concept-maison-trop-petite.mp4"></video>
-        <figcaption><span class="titre-film">Trop petite <span class="duree">0:18</span></span><button class="agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> Voir en grand</button></figcaption>
-      </figure>
-      <figure>
-        <video id="v-maison-grande" controls playsinline preload="metadata" poster="videos/concept-maison-trop-grande.jpg" src="videos/concept-maison-trop-grande.mp4"></video>
-        <figcaption><span class="titre-film">Trop grande <span class="duree">0:18</span></span><button class="agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> Voir en grand</button></figcaption>
-      </figure>
+    <div class="colonnes">
+      <div class="paire">
+        <h3>Trop petite</h3>
+        <div class="grille">
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/maison-petite.jpg" src="medias/maison-petite-voix-trame.mp4"></video>
+          <figcaption><span class="titre">Avec trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/maison-petite.jpg" src="medias/maison-petite-voix-sans-trame.mp4"></video>
+          <figcaption><span class="titre">Sans trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        </div>
+      </div>
+      <div class="paire">
+        <h3>Trop grande</h3>
+        <div class="grille">
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/maison-grande.jpg" src="medias/maison-grande-voix-trame.mp4"></video>
+          <figcaption><span class="titre">Avec trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/maison-grande.jpg" src="medias/maison-grande-voix-sans-trame.mp4"></video>
+          <figcaption><span class="titre">Sans trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section aria-labelledby="c2">
+  <section aria-labelledby="s-punch">
     <div class="tete">
       <div>
-        <div class="concept">Concept 2</div>
-        <h2 id="c2">La cuisine</h2>
+        <div class="numero">02 · Vidéos</div>
+        <h2 id="s-punch">La chute en premier</h2>
       </div>
-      <p>Une vraie cuisine qui ne change jamais. La chaise d'un ado vient bloquer le passage du père, ou les chaises vides et le silence montrent le vide.</p>
+      <div class="texte"><p>On ouvre sur l'image finale avec la question, la gomme l'efface, puis on raconte comment ils en sont arrivés là. Même voix, mêmes deux options de son.</p></div>
     </div>
-    <div class="films">
+    <div class="colonnes">
+      <div class="paire">
+        <h3>Trop petite</h3>
+        <div class="grille">
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/punch-petite.jpg" src="medias/punch-petite-trame.mp4"></video>
+          <figcaption><span class="titre">Avec trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/punch-petite.jpg" src="medias/punch-petite-sans-trame.mp4"></video>
+          <figcaption><span class="titre">Sans trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        </div>
+      </div>
+      <div class="paire">
+        <h3>Trop grande</h3>
+        <div class="grille">
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/punch-grande.jpg" src="medias/punch-grande-trame.mp4"></video>
+          <figcaption><span class="titre">Avec trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/punch-grande.jpg" src="medias/punch-grande-sans-trame.mp4"></video>
+          <figcaption><span class="titre">Sans trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-direct">
+    <div class="tete">
+      <div>
+        <div class="numero">03 · Vidéos</div>
+        <h2 id="s-direct">Directement dans l’histoire</h2>
+      </div>
+      <div class="texte"><p>Ni maison ni chute au début : la première scène se dessine dès la première image, sous la question. Même voix, mêmes deux options de son.</p></div>
+    </div>
+    <div class="colonnes">
+      <div class="paire">
+        <h3>Trop petite</h3>
+        <div class="grille">
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/direct-petite.jpg" src="medias/direct-petite-trame.mp4"></video>
+          <figcaption><span class="titre">Avec trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/direct-petite.jpg" src="medias/direct-petite-sans-trame.mp4"></video>
+          <figcaption><span class="titre">Sans trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        </div>
+      </div>
+      <div class="paire">
+        <h3>Trop grande</h3>
+        <div class="grille">
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/direct-grande.jpg" src="medias/direct-grande-trame.mp4"></video>
+          <figcaption><span class="titre">Avec trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        <figure>
+          <video class="media" controls controlslist="nofullscreen noremoteplayback" disablepictureinpicture playsinline preload="metadata" poster="medias/direct-grande.jpg" src="medias/direct-grande-sans-trame.mp4"></video>
+          <figcaption><span class="titre">Sans trame <span class="detail">0:13</span></span><span class="actions"><button class="bouton agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> En grand</button></span></figcaption>
+        </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="s-statiques">
+    <div class="tete">
+      <div>
+        <div class="numero">04 · Statiques</div>
+        <h2 id="s-statiques">Pubs statiques</h2>
+      </div>
+      <div class="texte"><p>Le même message en une image : l'accroche, l'illustration tirée du film, le logo et le slogan, sur le fond beige de la marque.</p></div>
+    </div>
+    <div class="grille">
       <figure>
-        <video id="v-cuisine-petite" controls playsinline preload="metadata" poster="videos/concept-cuisine-trop-petite.jpg" src="videos/concept-cuisine-trop-petite.mp4"></video>
-        <figcaption><span class="titre-film">Trop petite <span class="duree">0:18</span></span><button class="agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> Voir en grand</button></figcaption>
+        <button class="vignette agrandir" type="button" aria-label="Voir en grand : statique maison trop petite"><img class="media" src="medias/statique-maison-trop-petite.jpg" alt="Pub statique : une famille entassée dans une maison trop petite, le père se cogne au toit." loading="lazy" width="1080" height="1920"></button>
+        <figcaption><span class="titre">Trop petite <span class="detail">statique</span></span></figcaption>
       </figure>
       <figure>
-        <video id="v-cuisine-grande" controls playsinline preload="metadata" poster="videos/concept-cuisine-trop-grande.jpg" src="videos/concept-cuisine-trop-grande.mp4"></video>
-        <figcaption><span class="titre-film">Trop grande <span class="duree">0:18</span></span><button class="agrandir" type="button"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/></svg> Voir en grand</button></figcaption>
+        <button class="vignette agrandir" type="button" aria-label="Voir en grand : statique maison trop grande"><img class="media" src="medias/statique-maison-trop-grande.jpg" alt="Pub statique : un couple âgé, petit sur son divan dans un grand salon vide, une photo de famille au mur." loading="lazy" width="1080" height="1920"></button>
+        <figcaption><span class="titre">Trop grande <span class="detail">statique</span></span></figcaption>
       </figure>
     </div>
   </section>
 
   <footer>
     <span>Simon Lafrenière, courtier immobilier résidentiel et commercial</span>
-    <span>Version de travail pour présentation interne</span>
+    <span>Version de présentation</span>
   </footer>
 </main>
 
-<div class="grand" id="grand" hidden role="dialog" aria-modal="true" aria-label="Film agrandi">
+<div class="grand" id="grand" hidden role="dialog" aria-modal="true" aria-label="Visuel agrandi">
   <span class="nom" id="grand-nom"></span>
-  <button class="agrandir fermer" type="button" id="fermer">Fermer</button>
-  <video id="grand-video" controls playsinline></video>
+  <button class="bouton fermer" type="button" id="fermer">Fermer</button>
+  <video class="media" id="grand-video" controls playsinline hidden></video>
+  <img class="media" id="grand-image" alt="" hidden>
 </div>
 
 <script>
-  // Une seule vidéo joue à la fois : lancer un film met les autres en pause.
+  // Une seule vidéo joue à la fois.
   const films = document.querySelectorAll("video");
   films.forEach(v => v.addEventListener("play", () => films.forEach(o => { if (o !== v) o.pause(); })));
 
-  // « Voir en grand » : le film seul, à la hauteur de la fenêtre, repris là où il était.
+  // Visionneuse : la vidéo reprend là où elle était ; l'image s'affiche en entier.
   const grand = document.getElementById("grand");
   const gv = document.getElementById("grand-video");
-  let source = null;
-  document.querySelectorAll(".agrandir:not(.fermer)").forEach(b => b.addEventListener("click", () => {
+  const gi = document.getElementById("grand-image");
+  let source = null, declencheur = null;
+  document.querySelectorAll(".agrandir").forEach(b => b.addEventListener("click", () => {
     const fig = b.closest("figure");
-    source = fig.querySelector("video");
-    const concept = fig.closest("section").querySelector("h2").textContent;
-    document.getElementById("grand-nom").textContent = concept + " · " + fig.querySelector(".titre-film").firstChild.textContent.trim();
-    source.pause();
-    gv.poster = source.poster;
-    gv.src = source.currentSrc || source.src;
-    gv.currentTime = source.currentTime || 0;
+    const section = fig.closest("section").querySelector("h2").textContent + (fig.closest(".paire") ? " · " + fig.closest(".paire").querySelector("h3").textContent : "");
+    document.getElementById("grand-nom").textContent = section + " · " + fig.querySelector(".titre").firstChild.textContent.trim();
+    declencheur = b;
+    const video = fig.querySelector("video");
+    if (video) {
+      source = video; video.pause();
+      gi.hidden = true; gv.hidden = false;
+      gv.poster = video.poster; gv.src = video.currentSrc || video.src;
+      gv.currentTime = video.currentTime || 0;
+      gv.play().catch(() => {});
+    } else {
+      source = null;
+      const img = fig.querySelector("img");
+      gv.hidden = true; gi.hidden = false;
+      gi.src = img.currentSrc || img.src; gi.alt = img.alt;
+    }
     grand.hidden = false;
     document.body.style.overflow = "hidden";
-    gv.play().catch(() => {});
     document.getElementById("fermer").focus();
   }));
   function fermer() {
     if (grand.hidden) return;
     gv.pause();
     if (source) { try { source.currentTime = gv.currentTime; } catch (e) {} }
+    gv.removeAttribute("src"); gv.load();
     grand.hidden = true;
     document.body.style.overflow = "";
+    if (declencheur) declencheur.focus();
   }
   document.getElementById("fermer").addEventListener("click", fermer);
   grand.addEventListener("click", e => { if (e.target === grand) fermer(); });
